@@ -1,0 +1,1 @@
+# etiketovaci_aplikace
