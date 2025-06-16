@@ -4,263 +4,108 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Etiketovací aplikace</title>
-  <!-- ======= STYLES ======= -->
-  <style>
-    :root {
-      --primary: #1976d2;
-      --primary-dark: #1251a1;
-      --bg: #f4f4f4;
-      --card: #fff;
-      --green: #e8fbe8;   /* výběr jazyka */
-      --numpad: #fff5e6;  /* pozadí numpadu */
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--green);
-      transition: background 0.3s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding-bottom: 40px;
-    }
-    body.step-ean { background: var(--bg); }
-
-    /* Hlavní titulek */
-    #stepTitle { margin: 90px 0 28px; font-size: 28px; font-weight: 600; color: #333; text-align: center; }
-
-    /* Jazykové dlaždice */
-    .language-select { display: flex; flex-direction: column; align-items: center; gap: 18px; margin-bottom: 32px; }
-    .lang-btn {
-      width: 240px; height: 70px; border: 2px solid #ddd; background: #fff; border-radius: 10px;
-      font-size: 18px; display: flex; align-items: center; justify-content: center; gap: 10px;
-      cursor: pointer; transition: background 0.2s;
-    }
-    .lang-btn:hover { background: #eaeaea; }
-    .flag { height: 26px; }
-
-    /* Globální přepínač jazyka */
-    #langToggle {
-      position: fixed; top: 14px; right: 14px;
-      border: none; background: #fff; border-radius: 50%; width: 46px; height: 46px;
-      display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,.15);
-      cursor: pointer; font-size: 22px;
-    }
-
-    /* Vyhledávací pruh */
-    #searchBar { display: none; text-align: center; margin-bottom: 20px; }
-    #eanInput { font-size: 22px; padding: 12px; width: 260px; border-radius: 8px; border: 1px solid #bbb; margin-right: 6px; }
-    #resetBtn { border: none; background: #ddd; padding: 11px 14px; border-radius: 8px; cursor: pointer; font-size: 18px; }
-    #searchBtn { padding: 12px 28px; font-size: 20px; border: none; border-radius: 8px; background: var(--primary); color: #fff; cursor: pointer; transition: background 0.2s; }
-    #searchBtn:hover { background: var(--primary-dark); }
-
-    /* Výsledky */
-    #result { margin-top: 20px; width: 96%; max-width: 920px; }
-    .card {
-      background: var(--card); border-radius: 14px; box-shadow: 0 3px 8px rgba(0,0,0,.12);
-      padding: 26px; margin-bottom: 28px;
-    }
-    .country-btn {
-      border: 1px solid #ddd; background: #fff; border-radius: 8px; padding: 8px 14px; font-size: 16px;
-      display: inline-flex; align-items: center; gap: 6px; margin: 0 12px 12px 0; cursor: pointer; transition: background 0.2s;
-    }
-    .country-btn:hover { background: #eee; }
-    .label { font-weight: 600; margin-right: 4px; }
-
-    /* Numpad */
-    .qty-wrap { background: var(--numpad); border-radius: 12px; padding: 20px; margin-top: 20px; }
-    .qty-display { font-size: 36px; font-weight: bold; margin-bottom: 20px; }
-    .numpad { display: grid; grid-template-columns: repeat(3, 90px); gap: 16px; justify-content: center; }
-    .pad-btn {
-      height: 90px; font-size: 26px; border: none; border-radius: 10px; background: #e0e0e0;
-      cursor: pointer; transition: background 0.2s;
-    }
-    .pad-btn:hover { background: #d0d0d0; }
-    .print-btn {
-      margin-top: 22px; padding: 14px 36px; font-size: 22px; border: none; border-radius: 10px;
-      background: var(--primary); color: #fff; cursor: pointer; transition: background 0.2s;
-    }
-    .print-btn:hover { background: var(--primary-dark); }
-  </style>
   <script src="https://labelary.github.io/browser-print-js/js/BrowserPrint-3.0.216.min.js"></script>
+  <style>
+    :root{--primary:#1976d2;--primary-dark:#1251a1;--bg:#f4f4f4;--green:#e8fbe8;--card:#fff;--numpad:#fff5e6}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,Helvetica,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;background:var(--green);transition:background .3s;padding-bottom:40px}
+    body.step-ean{background:var(--bg)}
+    h2{margin:90px 0 28px;font-size:28px;font-weight:600;text-align:center;color:#333}
+    .language-select{display:flex;flex-direction:column;align-items:center;gap:18px;margin-bottom:32px}
+    .lang-btn{width:240px;height:70px;border:2px solid #ddd;border-radius:12px;background:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:.2s}
+    .lang-btn:hover{background:#eaeaea}.flag{height:26px}
+    #langToggle{position:fixed;top:14px;right:14px;width:46px;height:46px;border:none;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.15);font-size:22px;cursor:pointer;z-index:50}
+    #searchBar{display:none;text-align:center;margin-bottom:24px}
+    #eanInput{width:260px;font-size:22px;padding:12px;border:1px solid #bbb;border-radius:8px;margin-right:8px}
+    #searchBtn,#resetBtn{font-size:18px;padding:12px 20px;border:none;border-radius:8px;cursor:pointer}
+    #searchBtn{background:var(--primary);color:#fff}#searchBtn:hover{background:var(--primary-dark)}
+    #resetBtn{background:#ddd}
+    #result{margin-top:20px;width:96%;max-width:920px}
+    .card{background:var(--card);border-radius:14px;box-shadow:0 3px 8px rgba(0,0,0,.12);padding:26px;margin-bottom:28px;text-align:left}
+    .label{font-weight:600;margin-right:4px}
+    .mutace-grid{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+    .country-btn{border:1px solid #ddd;background:#fff;border-radius:8px;padding:8px 14px;font-size:16px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;transition:.2s}.country-btn:hover{background:#eee}
+    .qty-wrap{background:var(--numpad);border-radius:12px;padding:20px;margin-top:20px;display:flex;flex-direction:column;align-items:center}
+    .qty-display{font-size:36px;font-weight:bold;margin-bottom:20px}
+    .numpad{display:grid;grid-template-columns:repeat(3,90px);gap:16px;justify-content:center;margin-bottom:16px}
+    .pad-btn{height:90px;font-size:26px;border:none;border-radius:10px;background:#e0e0e0;cursor:pointer;transition:.2s}.pad-btn:hover{background:#d0d0d0}
+    .print-btn{padding:14px 36px;font-size:22px;border:none;border-radius:10px;background:var(--primary);color:#fff;cursor:pointer;transition:.2s}.print-btn:hover{background:var(--primary-dark)}
+  </style>
 </head>
 <body class="step-lang">
-  <!-- Globální přepínač jazyka -->
   <button id="langToggle" title="Změnit jazyk">🌐</button>
-
-  <!-- Titulek kroku -->
   <h2 id="stepTitle">Výběr jazyka</h2>
-
-  <!-- Dlaždice jazyků -->
   <div id="langSelect" class="language-select">
-    <button class="lang-btn"><img class="flag" src="https://flagcdn.com/24x18/cz.png">Čeština</button>
-    <button class="lang-btn"><img class="flag" src="https://flagcdn.com/24x18/de.png">Deutsch</button>
-    <button class="lang-btn"><img class="flag" src="https://flagcdn.com/24x18/ua.png">Українська</button>
-    <button class="lang-btn"><img class="flag" src="https://flagcdn.com/24x18/gb.png">English</button>
+    <button class="lang-btn" data-lang="cs"><img class="flag" src="https://flagcdn.com/24x18/cz.png">Čeština</button>
+    <button class="lang-btn" data-lang="de"><img class="flag" src="https://flagcdn.com/24x18/de.png">Deutsch</button>
+    <button class="lang-btn" data-lang="ua"><img class="flag" src="https://flagcdn.com/24x18/ua.png">Українська</button>
+    <button class="lang-btn" data-lang="en"><img class="flag" src="https://flagcdn.com/24x18/gb.png">English</button>
   </div>
 
-  <!-- Vyhledávací pruh -->
   <div id="searchBar">
-    <input type="text" id="eanInput" placeholder="Zadej EAN kód" />
-    <button id="resetBtn" title="Vymazat">⟲</button>
-    <button id="searchBtn">Hledat</button>
+    <input id="eanInput" />
+    <button id="resetBtn">⟲</button>
+    <button id="searchBtn"></button>
   </div>
 
-  <!-- Výsledky / numpad -->
   <div id="result"></div>
 
-  <!-- ======= SCRIPT ======= -->
-  <script>
-    /***** 1. Přepínání kroků *****/
-    const body      = document.body;
-    const langSel   = document.getElementById('langSelect');
-    const searchBar = document.getElementById('searchBar');
-    const title     = document.getElementById('stepTitle');
-    const eanInput  = document.getElementById('eanInput');
-    document.getElementById('langToggle').onclick = resetToLang;
+<script>
+(()=>{
+  /* ===== Translations ===== */
+  const i18n={cs:{selLang:'Výběr jazyka',enterEAN:'Zadej EAN kód',search:'Hledat',eanPh:'Zadej EAN kód',notFound:'EAN nenalezen',loading:'Načítám…',mutTitle:'Jazykové mutace',id:'ID',size:'Label size',type:'Typ zboží',print:'🖨️ Tisk',qty0:'0',alertEAN:'Zadejte EAN'},de:{selLang:'Sprache wählen',enterEAN:'EAN eingeben',search:'Suche',eanPh:'EAN eingeben',notFound:'EAN nicht gefunden',loading:'Lade…',mutTitle:'Sprachversionen',id:'ID',size:'Etikettengröße',type:'Warentyp',print:'🖨️ Drucken',qty0:'0',alertEAN:'EAN eingeben'},ua:{selLang:'Вибір мови',enterEAN:'Введіть EAN',search:'Пошук',eanPh:'Введіть EAN',notFound:'EAN не знайдено',loading:'Завантаження…',mutTitle:'Мовні версії',id:'ID',size:'Розмір етикетки',type:'Тип товару',print:'🖨️ Друк',qty0:'0',alertEAN:'Введіть EAN'},en:{selLang:'Select language',enterEAN:'Enter EAN',search:'Search',eanPh:'Enter EAN',notFound:'EAN not found',loading:'Loading…',mutTitle:'Language versions',id:'ID',size:'Label size',type:'Type of goods',print:'🖨️ Print',qty0:'0',alertEAN:'Enter EAN'}};
+  let lang='cs';const t=k=>i18n[lang][k]||k;
 
-    langSel.addEventListener('click', e => {
-      if (e.target.closest('.lang-btn')) {
-        langSel.style.display = 'none';
-        searchBar.style.display = 'block';
-        title.textContent = 'Zadej EAN kód';
-        eanInput.focus();
-        body.classList.replace('step-lang', 'step-ean');
-      }
-    });
+  /* ===== Elements ===== */
+  const stepTitle=document.getElementById('stepTitle');
+  const langSelect=document.getElementById('langSelect');
+  const searchBar=document.getElementById('searchBar');
+  const eanInput=document.getElementById('eanInput');
+  const searchBtn=document.getElementById('searchBtn');
+  const resetBtn=document.getElementById('resetBtn');
+  const resultDiv=document.getElementById('result');
 
-    function resetToLang() {
-      body.classList.replace('step-ean', 'step-lang');
-      langSel.style.display = 'flex';
-      searchBar.style.display = 'none';
-      title.textContent = 'Výběr jazyka';
-      document.getElementById('result').innerHTML = '';
-    }
+  const clean=s=>String(s).replace(/[^0-9]/g,'').trim();
+  const flagISO=c=>(c||'').slice(0,2).toLowerCase();
 
-    /***** 2. Reset vyhledávacího pole *****/
-    document.getElementById('resetBtn').onclick = () => {
-      eanInput.value = '';
-      document.getElementById('result').innerHTML = '';
-      eanInput.focus();
-    };
+  function applyTexts(){stepTitle.textContent=t('selLang');eanInput.placeholder=t('eanPh');searchBtn.textContent=t('search');}
+  applyTexts();
 
-    /***** 3. Utils *****/
-    const clean   = s => String(s).replace(/[^0-9]/g, '').trim();
-    const flagISO = c => c.slice(0, 2).toLowerCase();
-    let rowsByCountry = {}, qty = '';
+  /* === Switch UI language === */
+  function toLang(btn){lang=btn.dataset.lang;applyTexts();showEAN();}
+  document.querySelectorAll('.lang-btn').forEach(b=>b.onclick=function(){toLang(this);});
+  document.getElementById('langToggle').onclick=()=>{langSelect.style.display='flex';searchBar.style.display='none';resultDiv.innerHTML='';document.body.classList.remove('step-ean');applyTexts();};
+  function showEAN(){langSelect.style.display='none';searchBar.style.display='block';stepTitle.textContent=t('enterEAN');document.body.classList.add('step-ean');eanInput.focus();}
+  resetBtn.onclick=()=>{eanInput.value='';resultDiv.innerHTML='';eanInput.focus();};
 
-    /***** 4. Načtení dat z Google Sheets *****/
-    async function fetchSheet() {
-      const r = await fetch('https://opensheet.elk.sh/1OZ6xgh0IdQntCylrZWA7lJI4CGNVy7O_i53veTuNGLU/TEST');
-      if (!r.ok) throw new Error(r.status);
-      return r.json();
-    }
+  /* === Fetch sheet once === */
+  let cache=null;async function sheet(){if(cache)return cache;const r=await fetch('https://opensheet.elk.sh/1OZ6xgh0IdQntCylrZWA7lJI4CGNVy7O_i53veTuNGLU/TEST');cache=await r.json();return cache;}
 
-    /***** 5. Vyhledávání EAN *****/
-    const resultDiv = document.getElementById('result');
-    document.getElementById('searchBtn').onclick = () => searchEAN(eanInput.value);
-    eanInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchEAN(e.target.value); });
+  /* === Search === */
+  searchBtn.onclick=searchEAN;eanInput.addEventListener('keydown',e=>e.key==='Enter'&&searchEAN());
+  async function searchEAN(){const ean=clean(eanInput.value);if(!ean){alert(t('alertEAN'));return;}resultDiv.textContent=t('loading');const data=await sheet();const rows=data.filter(r=>clean(r.EAN)===ean);if(!rows.length){resultDiv.textContent=t('notFound');return;}const map={};rows.forEach(r=>{const c=r.Country||'--';(map[c]=map[c]||[]).push(r)});renderProduct(rows[0],map);}
 
-    async function searchEAN(raw) {
-      const ean = clean(raw);
-      if (!ean) { alert('Zadejte EAN'); return; }
-      resultDiv.textContent = 'Načítám…';
-      try {
-        const data = await fetchSheet();
-        const matches = data.filter(r => Object.values(r).some(v => clean(v) === ean));
-        if (!matches.length) { resultDiv.textContent = 'EAN nenalezen'; return; }
+  function renderProduct(p,map){let html=`<div class='card'><h2 style='margin-top:0'>${p['Název produktu']||p.Name}</h2>`;
+    html+=`<p><span class='label'>EAN:</span>${p.EAN}</p>`;
+    html+=`<p><span class='label'>${t('id')}:</span>${p.ID||'-'}</p>`;
+    html+=`<p><span class='label'>${t('size')}:</span>${p['Label size']||'-'}</p>`;
+    html+=`<p><span class='label'>${t('type')}:</span>${p['Type of Goods']||'-'}</p>`;
+    html+=`<h3>${t('mutTitle')}</h3><div class='mutace-grid'>`;
+    for(const c in map){html+=`<button class='country-btn' data-c='${c}'><img class='flag' src='https://flagcdn.com/24x18/${flagISO(c)}.png'>${c}</button>`;}
+    html+='</div><div id="countryDetails"></div></div>';resultDiv.innerHTML=html;resultDiv.dataset.map=JSON.stringify(map);
+  }
 
-        // seskup podle země
-        rowsByCountry = {};
-        matches.forEach(r => {
-          const c = r.Country || '--';
-          (rowsByCountry[c] = rowsByCountry[c] || []).push(r);
-        });
-
-        // karta produktu
-        const f = matches[0];
-        let html = `<div class='card'><h2>${f['Název produktu'] || f.Name}</h2>`;
-        html += `<p><span class='label'>EAN:</span>${f.EAN}</p>`;
-        html += `<p><span class='label'>ID:</span>${f.ID || '-'}</p>`;
-        html += `<p><span class='label'>Label size:</span>${f['Label size'] || '-'}</p>`;
-        html += `<p><span class='label'>Typ zboží:</span>${f['Type of Goods'] || '-'}</p>`;
-        html += '<h3>Jazykové mutace</h3>';
-        for (const c of Object.keys(rowsByCountry)) {
-          html += `<button class='country-btn' data-c='${c}'><img class='flag' src='https://flagcdn.com/24x18/${flagISO(c)}.png'>${c}</button>`;
-        }
-        html += '</div><div id="countryDetails"></div>';
-        resultDiv.innerHTML = html;
-      } catch (err) {
-        console.error(err);
-        resultDiv.textContent = 'Chyba načítání';
-      }
-    }
-
-    /***** 6. Mutace & numpad *****/
-    resultDiv.addEventListener('click', e => {
-      const btn = e.target.closest('.country-btn');
-      if (btn) showCountry(btn.dataset.c);
-    });
-
-    function resetQty() { qty = ''; updateQty(); }
-    function addDigit(d) { if (qty.length < 6) { qty += d; updateQty(); } }
-    function updateQty() { const el = document.getElementById('qtyDisplay'); if (el) el.textContent = qty || '0'; }
-
-    function showCountry(country) {
-      resetQty();
-      const rows = rowsByCountry[country];
-      let out = `<div class='card'><h3>Mutace pro ${country}</h3>`;
-      rows.forEach(r => {
-        out += `<p><span class='label'>Soubor:</span> <a href='https://drive.google.com/open?id=${r['File ID']}' target='_blank'>${r.Link || r.Name}</a></p>`;
-      });
-      out += `<div class='qty-wrap'><div id='qtyDisplay' class='qty-display'>0</div><div class='numpad' id='numpad'></div>`;
-      out += `<button class='print-btn' data-c='${country}'>🖨️ Tisk</button></div></div>`;
-      document.getElementById('countryDetails').innerHTML = out;
-
-      // vytvoření numpadu
-      ['1','2','3','4','5','6','7','8','9','C','0','*'].forEach(v => {
-        const b = document.createElement('button');
-        b.className = 'pad-btn'; b.textContent = v;
-        b.onclick = () => v === 'C' ? resetQty() : v === '*' ? null : addDigit(v);
-        document.getElementById('numpad').appendChild(b);
-      });
-    }
-
-    /***** 7. Mapování Label ➜ tiskárna *****/
-    const printerMap = {
-      '60x60': 'Zebra_60x60',
-      '60x40': 'Zebra_60x40',
-      '100x75': 'Zebra_100x75'
-    };
-
-    /***** 8. Tisk *****/
-    resultDiv.addEventListener('click', e => {
-      const printBtn = e.target.closest('.print-btn');
-      if (!printBtn) return;
-      const country = printBtn.dataset.c;
-      const count   = parseInt(qty) || 0;
-      if (count <= 0) { alert('Zadejte množství ≥ 1'); return; }
-
-      const row  = rowsByCountry[country][0];
-      const size = row['Label size'] || 'Default';
-      const zpl  = `^XA^CF0,40^FO30,30^FD${row.EAN} - ${country} - ${count}x^FS^XZ`;
-      const targetName = printerMap[size] || null;
-
-      if (window.BrowserPrint) {
-        BrowserPrint.getPrinters(list => {
-          const printer = targetName ? list.find(p => p.name.includes(targetName)) : list[0];
-          if (!printer) { alert('Nenalezena tiskárna pro '+size); return; }
-          printer.send(zpl, () => resetQty(), err => alert('Chyba tisku: '+err));
-        }, err => alert('BrowserPrint nenalezl tiskárny'));
-      } else {
-        // fallback – zobraz ZPL
-        const w = window.open('', '_blank');
-        if (w) w.document.write(`<pre>(${size} ➜ ${targetName||'default'})\n${zpl.replace(/</g,'&lt;')}</pre>`);
-        alert('(Demo) ZPL zobrazeno – BrowserPrint není dostupný');
-        resetQty();
-      }
-    });
-  </script>
+  /* ===== Numpad & print ===== */
+  let qty='',currentRow=null;
+  resultDiv.addEventListener('click',e=>{
+    const cb=e.target.closest('.country-btn');if(cb){const map=JSON.parse(resultDiv.dataset.map);currentRow=map[cb.dataset.c][0];showQty();}
+    const pad=e.target.closest('.pad-btn');if(pad)handlePad(pad.dataset.d);
+    if(e.target.closest('.print-btn'))alert('Print demo');
+  });
+  function showQty(){qty='';let b=`<div class='qty-wrap'><div id='qtyDisplay' class='qty-display'>${t('qty0')}</div><div class='numpad'>`;
+    '123456789C0*'.split('').forEach(d=>b+=`<button class='pad-btn' data-d='${d}'>${d}</button>`);b+=`</div><button class='print-btn'>${t('print')}</button></div>`;document.getElementById('countryDetails').innerHTML=b;}
+  function handlePad(d){if(d==='C')qty='';else if(d!=='*'&&qty.length<6)qty+=d;document.getElementById('qtyDisplay').textContent=qty||t('qty0');}
+})();
+</script>
 </body>
 </html>
